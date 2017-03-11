@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import GoodsTable from './GoodsTable';
+import CategList from './CategList';
 
 class App extends React.Component {
 	
   render() {
-		const { goods } = this.props;
+		const { goods, categs } = this.props;
     return (
       <div className="container">
 				<div className="appTop">
@@ -18,8 +19,8 @@ class App extends React.Component {
 					</div>
 				</div>
 				<div className="appBottom">
-					<div className="appCatList">
-						Список категорий
+					<div className="appCategList">
+						<CategList categs={categs} />
 					</div>
 					<div className="appGoods">
 						<GoodsTable goods={goods} />
@@ -32,12 +33,14 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	goods: React.PropTypes.array.isRequired
+	goods: React.PropTypes.array.isRequired,
+	categs: React.PropTypes.array.isRequired
 }
 
 function mapOrdersToProps(store) {
 	return {
-		goods: store.goods
+		goods: store.goods,
+		categs: store.categs
 	}
 }
 

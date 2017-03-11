@@ -12,6 +12,6 @@
 .appBottom{
 	
 }
-.appTopButtons, .appGoods, .appCatList, .appLogo{
+.appTopButtons, .appGoods, .appCategList, .appLogo{
 	display:inline-block;
 }
