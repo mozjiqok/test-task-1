@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
 	
   render() {
+		console.log(this.props.goods);
     return (
       <div className="container">
 				<div className="appTop">
@@ -28,4 +30,14 @@ class App extends React.Component {
 	
 }
 
-export default App;
+App.propTypes = {
+	goods: React.PropTypes.array.isRequired
+}
+
+function mapOrdersToProps(store) {
+	return {
+		goods: store.goods
+	}
+}
+
+export default connect(mapOrdersToProps)(App);
