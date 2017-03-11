@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import GoodsTable from './GoodsTable';
 
 class App extends React.Component {
 	
   render() {
-		console.log(this.props.goods);
+		const { goods } = this.props;
     return (
       <div className="container">
 				<div className="appTop">
@@ -21,7 +22,7 @@ class App extends React.Component {
 						Список категорий
 					</div>
 					<div className="appGoods">
-						Таблица товаров
+						<GoodsTable goods={goods} />
 					</div>
 				</div>
       </div>
