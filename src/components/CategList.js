@@ -6,14 +6,21 @@ class CategList extends React.Component {
 		const { categs } = this.props;
 		const categsList = categs.map((el)=>{
 			return (
-				<li key={el.id}>{el.name}</li>
+				<div className="row" key={el.id}>
+					<div className="col-xs-2"><button>X</button></div>
+					<div className="col-xs-10">{el.name}</div>
+				</div>
 			);
 		});
 		
     return (
-			<ul>
+			<div>
 				{categsList}
-			</ul>
+				<div className="row">
+					<div className="col-xs-2"></div>
+					<div className="col-xs-10">Без категории</div>
+				</div>
+			</div>
     );
   }
 	
