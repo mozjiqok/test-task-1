@@ -1,8 +1,16 @@
 import React from 'react';
+import GoodsItem from './GoodsItem';
 
 class GoodsTable extends React.Component {
 	
   render() {
+		const { goods } = this.props;
+		const goodsList = goods.map((el)=>{
+			return (
+				<GoodsItem key={el.id} good={el} />
+			);
+		});
+		
     return (
       <div>
 				<table className="table">
@@ -16,9 +24,7 @@ class GoodsTable extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>Список товаров</td>
-						</tr>
+						{goodsList}
 					</tbody>
 				</table>
       </div>
