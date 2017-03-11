@@ -6,7 +6,7 @@ class App extends React.Component {
     return (
       <div className="container">
 				<div className="">
-					<div className="">
+					<div className="appLogo">
 						My-app
 					</div>
 					<div className="">
