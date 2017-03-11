@@ -1,9 +1,17 @@
 .appLogo{
-	display: inline-block;
 	border: 3px solid black;
 	border-radius: 95px / 70px;
 	font-weight: bold;
 	padding: 50px;
 	margin: 30px;
 	font-size: 24px;
+}
+.appTop{
+	
+}
+.appBottom{
+	
+}
+.appTopButtons, .appGoods, .appCatList, .appLogo{
+	display:inline-block;
 }

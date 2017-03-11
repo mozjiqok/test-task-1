@@ -5,20 +5,20 @@ class App extends React.Component {
   render() {
     return (
       <div className="container">
-				<div className="">
+				<div className="appTop">
 					<div className="appLogo">
 						My-app
 					</div>
-					<div className="">
+					<div className="appTopButtons">
 						<button>Добавить товар</button>
 						<button>Добавить категорию</button>
 					</div>
 				</div>
-				<div className="">
-					<div className="">
+				<div className="appBottom">
+					<div className="appCatList">
 						Список категорий
 					</div>
-					<div className="">
+					<div className="appGoods">
 						Таблица товаров
 					</div>
 				</div>
