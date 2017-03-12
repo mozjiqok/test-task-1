@@ -1,11 +1,13 @@
 import React from 'react';
 import EditGoodForm from './EditGoodForm';
+import DelGoodForm from './DelGoodForm';
 
 class GoodsItem extends React.Component {
 	
 	componentWillMount(){
 		this.setState({
-			showEditGood:false
+			showEditGood:false,
+			showDelGood:false
 		});
 	}
 	
@@ -13,13 +15,18 @@ class GoodsItem extends React.Component {
 		this.setState({showEditGood:action});
 	}
 	
-	editGoodClick(){
-		this.showEditGood(true);
+	showDelGood(action){
+		this.setState({showDelGood:action});
 	}
 	
   render() {
-		const { good, editGood, categs } = this.props;
-		const { showEditGood } = this.state;
+		const { good, editGood, categs, delGood } = this.props;
+		const { showEditGood, showDelGood } = this.state;
+		
+		const delGoodForm = showDelGood ?
+			<DelGoodForm showDelGood={this.showDelGood.bind(this)}
+				good={good} delGood={delGood} />
+			: [];
 		
 		const editGoodForm = showEditGood ?
 			<EditGoodForm showEditGood={this.showEditGood.bind(this)}
@@ -28,14 +35,18 @@ class GoodsItem extends React.Component {
 		
     return (
 			<tr>
-				<td>{editGoodForm}{good.id}</td>
+				<td>{delGoodForm}{editGoodForm}{good.id}</td>
 				<td>{good.name}</td>
 				<td>{good.cost}</td>
 				<td>{good.price}</td>
 				<td>
-					<button className="btn btn-default">Удалить</button>
 					<button className="btn btn-default"
-						onClick={this.editGoodClick.bind(this)}
+						onClick={() => this.showDelGood(true)}
+					>
+						Удалить
+					</button>
+					<button className="btn btn-default"
+						onClick={() => this.showEditGood(true)}
 					>
 						Изменить
 					</button>
@@ -49,6 +60,7 @@ class GoodsItem extends React.Component {
 GoodsItem.propTypes = {
 	good: React.PropTypes.object.isRequired,
 	editGood: React.PropTypes.func.isRequired,
+	delGood: React.PropTypes.func.isRequired,
 	categs: React.PropTypes.array.isRequired
 }
 
