@@ -1,6 +1,6 @@
 import React from 'react';
 
-class GoodsItem extends React.Component {
+class AddCategForm extends React.Component {
 	
 	componentWillMount(){
 		this.setState({name:''});
@@ -55,9 +55,9 @@ class GoodsItem extends React.Component {
 	
 }
 
-GoodsItem.propTypes = {
+AddCategForm.propTypes = {
 	showAddCateg: React.PropTypes.func.isRequired,
 	addCateg: React.PropTypes.func.isRequired
 }
 
-export default GoodsItem;
+export default AddCategForm;
