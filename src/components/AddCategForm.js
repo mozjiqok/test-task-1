@@ -39,6 +39,7 @@ class AddCategForm extends React.Component {
 							<form onSubmit={this.saveCateg.bind(this)}>
 								<div className="form-group">
 									<input autoFocus type="text" value={name}
+										className="form-control"
 										onChange={this.updateName.bind(this)}
 										placeholder="Название"
 									/>

@@ -35,11 +35,13 @@ class CategList extends React.Component {
 		
 		const categsList = categs.map((el)=>{
 			return (
-				<div className="row" key={el.id}>
-					<div className="col-xs-2">
-						<button onClick={() => {this.showDelCateg(el.id)}}>X</button>
+				<div className="row group-list" key={el.id}>
+					<div className="col-xs-3">
+						<button className="btn btn-default" onClick={() => {this.showDelCateg(el.id)}}>
+							X
+						</button>
 					</div>
-					<div className="col-xs-10">{el.name}</div>
+					<div className="col-xs-9 form-control-static"><a href="#">{el.name}</a></div>
 				</div>
 			);
 		});
@@ -49,8 +51,9 @@ class CategList extends React.Component {
 				{delCategForm}
 				{categsList}
 				<div className="row">
-					<div className="col-xs-2"></div>
-					<div className="col-xs-10">Без категории</div>
+					<div className="col-xs-offset-3 col-xs-9 form-control-static">
+						<a href="#">Без категории</a>
+					</div>
 				</div>
 			</div>
     );

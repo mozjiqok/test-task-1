@@ -43,7 +43,7 @@ class App extends React.Component {
 		
 		const addGoodForm = showAddGood ?
 			<AddGoodForm showAddGood={this.showAddGood.bind(this)}
-				addGood={addGood} />
+				addGood={addGood} categs={categs} />
 			: [];
 		
     return (
@@ -55,8 +55,8 @@ class App extends React.Component {
 						My-app
 					</div>
 					<div className="appTopButtons">
-						<button onClick={this.addGoodClick.bind(this)}>Добавить товар</button>
-						<button onClick={this.addCategClick.bind(this)}>Добавить категорию</button>
+						<button className="btn btn-default" onClick={this.addGoodClick.bind(this)}>Добавить товар</button>
+						<button className="btn btn-default" onClick={this.addCategClick.bind(this)}>Добавить категорию</button>
 					</div>
 				</div>
 				<div className="appBottom">

@@ -12,8 +12,8 @@ class GoodsItem extends React.Component {
 				<td>{good.cost}</td>
 				<td>{good.price}</td>
 				<td>
-					<button>Удалить</button>
-					<button>Изменить</button>
+					<button className="btn btn-default">Удалить</button>
+					<button className="btn btn-default">Изменить</button>
 				</td>
 			</tr>
     );

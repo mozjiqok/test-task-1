@@ -30,7 +30,14 @@ class AddGoodForm extends React.Component {
 	}
 	
   render() {
-		const { name, cost, price } = this.state;
+		const { name, cost, price, categ } = this.state;
+		const { categs } = this.props;
+		
+		const opts = categs.map((el) => {
+			return(
+				<option key={el.id} value={el.id}>{el.name}</option>
+			);
+		});
 		
     return (
 			<div className="modal">
@@ -47,20 +54,30 @@ class AddGoodForm extends React.Component {
 						<div className="modal-body text-center">
 							<form onSubmit={this.saveGood.bind(this)}>
 								<div className="form-group">
-									<input name="name" type="text" value={name}
+									<select className="form-control" name="categ" value={categ}
+										onChange={this.updateInput.bind(this)}
+										placeholder="Категория"
+										title="Категория"
+									>
+										{opts}
+									</select>
+								</div>
+								<div className="form-group">
+									<input className="form-control" name="name" type="text" value={name}
 										onChange={this.updateInput.bind(this)}
 										placeholder="Название"
+										title="Название"
 									/>
 								</div>
 								<div className="form-group">
-									<input name="cost" type="text" value={cost}
+									<input className="form-control" name="cost" type="text" value={cost}
 										onChange={this.updateInputNumber.bind(this)}
 										placeholder="Закупочная стоимость"
 										title="Закупочная стоимость"
 									/>
 								</div>
 								<div className="form-group">
-									<input name="price" type="text" value={price}
+									<input className="form-control" name="price" type="text" value={price}
 										onChange={this.updateInputNumber.bind(this)}
 										placeholder="Розничная цена"
 										title="Розничная цена"
@@ -81,7 +98,8 @@ class AddGoodForm extends React.Component {
 
 AddGoodForm.propTypes = {
 	showAddGood: React.PropTypes.func.isRequired,
-	addGood: React.PropTypes.func.isRequired
+	addGood: React.PropTypes.func.isRequired,
+	categs: React.PropTypes.array.isRequired
 }
 
 export default AddGoodForm;
