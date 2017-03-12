@@ -14,8 +14,9 @@ class GoodsItem extends React.Component {
 		this.setState({name:e.target.value});
 	}
 	
-	saveCateg(){
-		console.log('Saving categ ' + this.state.name);
+	saveCateg(e){
+		e.preventDefault();
+		this.props.addCateg(this.state.name);
 		this.props.showAddCateg(false);
 	}
 	
@@ -27,14 +28,24 @@ class GoodsItem extends React.Component {
 				<div className="modal-dialog modal-sm">
 					<div className="modal-content">
 						<div className="modal-header">
-							<span className="pull-right btn btn-xs" onClick={this.cancelAdd.bind(this)}>X</span>
+							<span className="pull-right btn btn-xs"
+								onClick={this.cancelAdd.bind(this)}
+							>
+								X
+							</span>
 							Добавить категорию
 						</div>
 						<div className="modal-body text-center">
-							<div className="form-group">
-								<input type="text" value={name} onChange={this.updateName.bind(this)} />
-							</div>
-							<button type="button" className="btn btn-success" onClick={this.saveCateg.bind(this)}>Сохранить</button>
+							<form onSubmit={this.saveCateg.bind(this)}>
+								<div className="form-group">
+									<input autoFocus type="text" value={name}
+										onChange={this.updateName.bind(this)}
+									/>
+								</div>
+								<button type="submit" className="btn btn-success">
+									Сохранить
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -45,7 +56,8 @@ class GoodsItem extends React.Component {
 }
 
 GoodsItem.propTypes = {
-	showAddCateg: React.PropTypes.func.isRequired
+	showAddCateg: React.PropTypes.func.isRequired,
+	addCateg: React.PropTypes.func.isRequired
 }
 
 export default GoodsItem;

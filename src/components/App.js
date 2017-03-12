@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import GoodsTable from './GoodsTable';
 import CategList from './CategList';
 import AddCategForm from './AddCategForm';
+import { addCateg } from '../actions/categActions';
 
 class App extends React.Component {
 	
@@ -22,11 +23,14 @@ class App extends React.Component {
 	}
 	
   render() {
-		const { goods, categs } = this.props;
+		const { goods, categs, addCateg } = this.props;
 		const { showAddCateg } = this.state;
+		
 		const addCategForm = showAddCateg ?
-			<AddCategForm showAddCateg={this.showAddCateg.bind(this)} />
+			<AddCategForm showAddCateg={this.showAddCateg.bind(this)}
+				addCateg={addCateg} />
 			: [];
+		
     return (
       <div className="container">
 				{addCategForm}
@@ -55,7 +59,8 @@ class App extends React.Component {
 
 App.propTypes = {
 	goods: React.PropTypes.array.isRequired,
-	categs: React.PropTypes.array.isRequired
+	categs: React.PropTypes.array.isRequired,
+	addCateg: React.PropTypes.func.isRequired
 }
 
 function mapOrdersToProps(store) {
@@ -65,4 +70,4 @@ function mapOrdersToProps(store) {
 	}
 }
 
-export default connect(mapOrdersToProps)(App);
+export default connect(mapOrdersToProps, { addCateg })(App);

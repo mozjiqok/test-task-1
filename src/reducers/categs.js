@@ -6,5 +6,12 @@ const initialState=[
 ];
 
 export default (state = initialState, action = {}) => {
-  return state;
+  switch(action.type) {
+		case 'ADD_CATEG':
+			return [
+				...state,
+				action.categ
+			];
+    default: return state;
+	}
 }
