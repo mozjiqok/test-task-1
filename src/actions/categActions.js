@@ -5,3 +5,9 @@ export function addCateg(name) {
     categ: {id:id,name:name}
   };
 }
+export function delCateg(id) {
+  return {
+    type: 'DEL_CATEG',
+    id: id
+  };
+}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import GoodsTable from './GoodsTable';
 import CategList from './CategList';
 import AddCategForm from './AddCategForm';
-import { addCateg } from '../actions/categActions';
+import { addCateg, delCateg } from '../actions/categActions';
 
 class App extends React.Component {
 	
@@ -23,7 +23,7 @@ class App extends React.Component {
 	}
 	
   render() {
-		const { goods, categs, addCateg } = this.props;
+		const { goods, categs, addCateg, delCateg } = this.props;
 		const { showAddCateg } = this.state;
 		
 		const addCategForm = showAddCateg ?
@@ -45,7 +45,7 @@ class App extends React.Component {
 				</div>
 				<div className="appBottom">
 					<div className="appCategList">
-						<CategList categs={categs} />
+						<CategList categs={categs} delCateg={delCateg} />
 					</div>
 					<div className="appGoods">
 						<GoodsTable goods={goods} />
@@ -60,7 +60,8 @@ class App extends React.Component {
 App.propTypes = {
 	goods: React.PropTypes.array.isRequired,
 	categs: React.PropTypes.array.isRequired,
-	addCateg: React.PropTypes.func.isRequired
+	addCateg: React.PropTypes.func.isRequired,
+	delCateg: React.PropTypes.func.isRequired
 }
 
 function mapOrdersToProps(store) {
@@ -70,4 +71,4 @@ function mapOrdersToProps(store) {
 	}
 }
 
-export default connect(mapOrdersToProps, { addCateg })(App);
+export default connect(mapOrdersToProps, { addCateg, delCateg })(App);
