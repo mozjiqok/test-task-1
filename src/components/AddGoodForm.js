@@ -4,10 +4,10 @@ class AddGoodForm extends React.Component {
 	
 	componentWillMount(){
 		this.setState({
-			categ:0,
+			categ:'0',
 			name:'',
-			cost:0,
-			price:0
+			cost:'0',
+			price:'0'
 		});
 	}
 	
