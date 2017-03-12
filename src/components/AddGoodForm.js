@@ -19,13 +19,15 @@ class AddGoodForm extends React.Component {
 		this.setState({[e.target.name]:e.target.value});
 	}
 	
-	updateInputNumber(e){
-		this.setState({[e.target.name]:parseInt(e.target.value,10)});
-	}
-	
 	saveGood(e){
 		e.preventDefault();
-		this.props.addGood(this.state);
+		const good = {...this.state};
+		this.props.addGood({
+			categ: parseInt(good.categ,10),
+			name: good.name,
+			price: parseFloat(good.price.replace(",","."),10),
+			cost: parseFloat(good.cost.replace(",","."),10)
+		});
 		this.props.showAddGood(false);
 	}
 	
@@ -71,14 +73,14 @@ class AddGoodForm extends React.Component {
 								</div>
 								<div className="form-group">
 									<input className="form-control" name="cost" type="text" value={cost}
-										onChange={this.updateInputNumber.bind(this)}
+										onChange={this.updateInput.bind(this)}
 										placeholder="Закупочная стоимость"
 										title="Закупочная стоимость"
 									/>
 								</div>
 								<div className="form-group">
 									<input className="form-control" name="price" type="text" value={price}
-										onChange={this.updateInputNumber.bind(this)}
+										onChange={this.updateInput.bind(this)}
 										placeholder="Розничная цена"
 										title="Розничная цена"
 									/>
