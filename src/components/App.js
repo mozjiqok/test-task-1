@@ -2,20 +2,41 @@ import React from 'react';
 import { connect } from 'react-redux';
 import GoodsTable from './GoodsTable';
 import CategList from './CategList';
+import AddCategForm from './AddCategForm';
 
 class App extends React.Component {
 	
+	componentWillMount(){
+		this.setState({
+			showAddCateg:false,
+			showAddGood:false
+		});
+	}
+	
+	showAddCateg(action){
+		this.setState({showAddCateg:action});
+	}
+	
+	addCategClick(){
+		this.showAddCateg(true);
+	}
+	
   render() {
 		const { goods, categs } = this.props;
+		const { showAddCateg } = this.state;
+		const addCategForm = showAddCateg ?
+			<AddCategForm showAddCateg={this.showAddCateg.bind(this)} />
+			: [];
     return (
       <div className="container">
+				{addCategForm}
 				<div className="appTop">
 					<div className="appLogo">
 						My-app
 					</div>
 					<div className="appTopButtons">
 						<button>Добавить товар</button>
-						<button>Добавить категорию</button>
+						<button onClick={this.addCategClick.bind(this)}>Добавить категорию</button>
 					</div>
 				</div>
 				<div className="appBottom">
