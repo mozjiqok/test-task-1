@@ -8,6 +8,12 @@ export function addGood(good) {
 		}
   };
 }
+export function editGood(good) {
+  return {
+    type: 'EDIT_GOOD',
+    good: good
+  };
+}
 export function delGood(id) {
   return {
     type: 'DEL_GOOD',

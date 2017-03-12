@@ -5,7 +5,7 @@ import CategList from './CategList';
 import AddCategForm from './AddCategForm';
 import AddGoodForm from './AddGoodForm';
 import { addCateg, delCateg } from '../actions/categActions';
-import { addGood, delGood } from '../actions/goodActions';
+import { addGood, delGood, editGood } from '../actions/goodActions';
 
 class App extends React.Component {
 	
@@ -33,7 +33,7 @@ class App extends React.Component {
 	}
 	
   render() {
-		const { goods, categs, addCateg, addGood, delCateg, delGood } = this.props;
+		const { goods, categs, addCateg, addGood, delCateg, delGood, editGood } = this.props;
 		const { showAddCateg, showAddGood } = this.state;
 		
 		const addCategForm = showAddCateg ?
@@ -64,7 +64,9 @@ class App extends React.Component {
 						<CategList categs={categs} delCateg={delCateg} />
 					</div>
 					<div className="appGoods">
-						<GoodsTable goods={goods} delGood={delGood} />
+						<GoodsTable goods={goods} delGood={delGood} editGood={editGood}
+							categs={categs}
+						/>
 					</div>
 				</div>
       </div>
@@ -79,7 +81,8 @@ App.propTypes = {
 	addCateg: React.PropTypes.func.isRequired,
 	delCateg: React.PropTypes.func.isRequired,
 	addGood: React.PropTypes.func.isRequired,
-	delGood: React.PropTypes.func.isRequired
+	delGood: React.PropTypes.func.isRequired,
+	editGood: React.PropTypes.func.isRequired
 }
 
 function mapStoreToProps(store) {
@@ -89,4 +92,4 @@ function mapStoreToProps(store) {
 	}
 }
 
-export default connect(mapStoreToProps, { addCateg, delCateg, addGood, delGood })(App);
+export default connect(mapStoreToProps, { addCateg, delCateg, addGood, delGood, editGood })(App);

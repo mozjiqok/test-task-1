@@ -4,10 +4,12 @@ import GoodsItem from './GoodsItem';
 class GoodsTable extends React.Component {
 	
   render() {
-		const { goods } = this.props;
+		const { goods, editGood, delGood, categs } = this.props;
 		const goodsList = goods.map((el)=>{
 			return (
-				<GoodsItem key={el.id} good={el} />
+				<GoodsItem key={el.id} good={el} editGood={editGood} delGood={delGood}
+					categs={categs}
+				/>
 			);
 		});
 		
@@ -34,7 +36,10 @@ class GoodsTable extends React.Component {
 }
 
 GoodsTable.propTypes = {
-	goods: React.PropTypes.array.isRequired
+	goods: React.PropTypes.array.isRequired,
+	editGood: React.PropTypes.func.isRequired,
+	delGood: React.PropTypes.func.isRequired,
+	categs: React.PropTypes.array.isRequired
 }
 
 export default GoodsTable;
