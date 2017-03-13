@@ -4,7 +4,7 @@ import GoodsTable from './GoodsTable';
 import CategList from './CategList';
 import AddCategForm from './AddCategForm';
 import AddGoodForm from './AddGoodForm';
-import { addCateg, delCateg } from '../actions/categActions';
+import { addCateg, delCateg, fetchData } from '../actions/categActions';
 import { addGood, delGood, editGood } from '../actions/goodActions';
 
 class App extends React.Component {
@@ -15,6 +15,7 @@ class App extends React.Component {
 			showAddGood:false,
 			filter: 0
 		});
+		this.props.fetchData();
 	}
 	
 	showAddCateg(action){
@@ -91,7 +92,8 @@ App.propTypes = {
 	delCateg: React.PropTypes.func.isRequired,
 	addGood: React.PropTypes.func.isRequired,
 	delGood: React.PropTypes.func.isRequired,
-	editGood: React.PropTypes.func.isRequired
+	editGood: React.PropTypes.func.isRequired,
+	fetchData: React.PropTypes.func.isRequired
 }
 
 function mapStoreToProps(store) {
@@ -101,4 +103,4 @@ function mapStoreToProps(store) {
 	}
 }
 
-export default connect(mapStoreToProps, { addCateg, delCateg, addGood, delGood, editGood })(App);
+export default connect(mapStoreToProps, { addCateg, delCateg, addGood, delGood, editGood, fetchData })(App);

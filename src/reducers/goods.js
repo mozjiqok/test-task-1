@@ -1,12 +1,7 @@
-const initialState=[
-	{id:1,name:"Товар 1",cost:2000,price:2500,categ:1},
-	{id:2,name:"Товар 2",cost:2200,price:2700,categ:2},
-	{id:3,name:"Товар 3",cost:2200,price:2700,categ:3},
-	{id:4,name:"Товар 4",cost:2200,price:2700,categ:4}
-];
-
-export default (state = initialState, action = {}) => {
+export default (state = [], action = {}) => {
   switch(action.type) {
+		case 'FETCH_GOODS':
+			return action.goods;
 		case 'ADD_GOOD':
 			return [
 				...state,
