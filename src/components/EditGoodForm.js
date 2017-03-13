@@ -37,6 +37,10 @@ class EditGoodForm extends React.Component {
 			);
 		});
 		
+		opts.unshift(
+			<option key={0} value={0}>Без категории</option>
+		);
+		
     return (
 			<div className="modal">
 				<div className="modal-dialog modal-sm">
