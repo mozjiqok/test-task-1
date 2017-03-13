@@ -12,7 +12,8 @@ class App extends React.Component {
 	componentWillMount(){
 		this.setState({
 			showAddCateg:false,
-			showAddGood:false
+			showAddGood:false,
+			filter: 0
 		});
 	}
 	
@@ -32,9 +33,15 @@ class App extends React.Component {
 		this.showAddGood(true);
 	}
 	
+	setFilter(categ){
+		this.setState({
+			filter: parseInt(categ,10)
+		});
+	}
+	
   render() {
 		const { goods, categs, addCateg, addGood, delCateg, delGood, editGood } = this.props;
-		const { showAddCateg, showAddGood } = this.state;
+		const { showAddCateg, showAddGood, filter } = this.state;
 		
 		const addCategForm = showAddCateg ?
 			<AddCategForm showAddCateg={this.showAddCateg.bind(this)}
@@ -61,11 +68,13 @@ class App extends React.Component {
 				</div>
 				<div className="appBottom">
 					<div className="appCategList">
-						<CategList categs={categs} delCateg={delCateg} />
+						<CategList categs={categs} delCateg={delCateg}
+							setFilter={this.setFilter.bind(this)}
+						/>
 					</div>
 					<div className="appGoods">
 						<GoodsTable goods={goods} delGood={delGood} editGood={editGood}
-							categs={categs}
+							categs={categs} filter={filter}
 						/>
 					</div>
 				</div>

@@ -24,6 +24,11 @@ class CategList extends React.Component {
 		});
 	}
 	
+	setFilter(e,categ){
+		e.preventDefault();
+		this.props.setFilter(categ);
+	}
+	
   render() {
 		const { categs, delCateg } = this.props;
 		const { toDel, showDelCateg } = this.state;
@@ -41,7 +46,9 @@ class CategList extends React.Component {
 							X
 						</button>
 					</div>
-					<div className="col-xs-9 form-control-static"><a href="#">{el.name}</a></div>
+					<div className="col-xs-9 form-control-static">
+						<a href="#" onClick={(e) => { this.setFilter(e,el.id) }}>{el.name}</a>
+					</div>
 				</div>
 			);
 		});
@@ -52,7 +59,7 @@ class CategList extends React.Component {
 				{categsList}
 				<div className="row">
 					<div className="col-xs-offset-3 col-xs-9 form-control-static">
-						<a href="#">Без категории</a>
+						<a href="#" onClick={(e) => { this.setFilter(e,-1) }}>Без категории</a>
 					</div>
 				</div>
 			</div>
