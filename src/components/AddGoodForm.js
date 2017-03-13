@@ -35,11 +35,15 @@ class AddGoodForm extends React.Component {
 		const { name, cost, price, categ } = this.state;
 		const { categs } = this.props;
 		
-		const opts = categs.map((el) => {
+		var opts = categs.map((el) => {
 			return(
 				<option key={el.id} value={el.id}>{el.name}</option>
 			);
 		});
+		
+		opts.unshift(
+			<option key={0} value={0}>Без категории</option>
+		);
 		
     return (
 			<div className="modal">
