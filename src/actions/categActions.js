@@ -26,8 +26,14 @@ export function addCateg(name) {
   };
 }
 export function delCateg(id) {
-  return {
-    type: 'DEL_CATEG',
-    id: id
-  };
+  return (dispatch) => {
+		dispatch({
+			type: 'DEL_CATEG',
+			id: id
+		});
+		dispatch({
+			type: 'UPD_GOODS_CATEG',
+			categ: id
+		});
+	};
 }

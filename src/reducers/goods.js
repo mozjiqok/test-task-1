@@ -42,6 +42,14 @@ export default (state = [], action = {}) => {
 			else{
 				return state;
 			}
+		case 'UPD_GOODS_CATEG':
+			const newState = state.map((el) => {
+				return {
+					...el,
+					categ:(el.categ === action.categ ? 0 : el.categ)
+				};
+			});
+			return newState;
     default: return state;
 	}
 }
