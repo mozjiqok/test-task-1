@@ -1,24 +1,39 @@
 import express from 'express';
+import { MongoClient } from 'mongodb';
+import assert from 'assert';
+import bodyParser from 'body-parser';
+
+var url = 'mongodb://localhost:27017/test';
 
 const app = express();
+app.use(bodyParser.json());
 
-const data = {
-	goods:[
-		{id:1,name:"Товар 1",cost:2000,price:2500,categ:1},
-		{id:2,name:"Товар 2",cost:2200,price:2700,categ:2},
-		{id:3,name:"Товар 3",cost:2200,price:2700,categ:3},
-		{id:4,name:"Товар 4",cost:2200,price:2700,categ:4}
-	],
-	categs:[
-		{id:1,name:"Категория 1"},
-		{id:2,name:"Категория 2"},
-		{id:3,name:"Категория 3"},
-		{id:4,name:"Категория 4"}
-	]
-};
+var fetchData = function(db, res) {
+  db.collection('goods').find({}).toArray((err, docs) => {
+    assert.equal(err, null);
+		fetchCategs(db, res, docs);
+  });
+}
+
+var fetchCategs = function(db, res, goods) {
+  db.collection('categs').find({}).toArray((err, docs) => {
+    assert.equal(err, null);
+		db.close();
+		res.send({goods:goods,categs:docs});
+  });
+}
 
 app.post('/*', (req, res) => {
-	res.send(data);
+	if(!req.body.hasOwnProperty('f')){
+		return false;
+	}
+	switch(req.body.f){
+		case 'fetch':
+			MongoClient.connect(url, function(err, db) {
+				assert.equal(null, err);
+				fetchData(db, res);
+			});
+	}
 });
 
 app.listen(9000, () => console.log('Running on localhost:9000'));

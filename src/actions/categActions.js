@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export function fetchData() {
   return (dispatch) => {
-		axios.post('/',{f:'order'})
+		axios.post('/',{f:'fetch'})
       .then((res) => {
 				dispatch({
 					type: 'FETCH_GOODS',
