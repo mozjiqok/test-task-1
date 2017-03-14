@@ -1,11 +1,25 @@
+import axios from 'axios';
+
 export function addGood(good) {
-	const id = Date.now();
-  return {
-    type: 'ADD_GOOD',
-    good: {
-			...good,
-			id:id
-		}
+  return (dispatch) => {
+		axios.post('/',{f:'add_good',good:good})
+      .then((res) => {
+				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
+					dispatch({
+						type: 'ADD_GOOD',
+						good: {
+							...good,
+							id:res.data.id,
+						}
+					});
+				}
+				else{
+					console.log(res);
+				}
+			})
+      .catch((err) => {
+				console.log(err);
+      })
   };
 }
 export function editGood(good) {

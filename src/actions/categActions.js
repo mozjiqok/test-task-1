@@ -19,10 +19,25 @@ export function fetchData() {
   };
 }
 export function addCateg(name) {
-	const id = Date.now();
-  return {
-    type: 'ADD_CATEG',
-    categ: {id:id,name:name}
+  return (dispatch) => {
+		axios.post('/',{f:'add_categ',categ:{name:name}})
+      .then((res) => {
+				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
+					dispatch({
+						type: 'ADD_CATEG',
+						categ: {
+							id:res.data.id,
+							name:name
+						}
+					});
+				}
+				else{
+					console.log(res);
+				}
+			})
+      .catch((err) => {
+				console.log(err);
+      })
   };
 }
 export function delCateg(id) {
