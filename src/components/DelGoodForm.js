@@ -24,7 +24,7 @@ class DelGoodForm extends React.Component {
 							>
 								X
 							</span>
-							Точно удалить товар {good.name}?
+							Точно удалить товар id{good.id}?
 						</div>
 						<div className="modal-body text-center">
 							<div className="form-group">
