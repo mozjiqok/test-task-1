@@ -42,13 +42,24 @@ export function addCateg(name) {
 }
 export function delCateg(id) {
   return (dispatch) => {
-		dispatch({
-			type: 'DEL_CATEG',
-			id: id
-		});
-		dispatch({
-			type: 'UPD_GOODS_CATEG',
-			categ: id
-		});
+		axios.post('/',{f:'del_categ',categId:id})
+      .then((res) => {
+				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
+					dispatch({
+						type: 'DEL_CATEG',
+						id: id
+					});
+					dispatch({
+						type: 'UPD_GOODS_CATEG',
+						categ: id
+					});
+				}
+				else{
+					console.log(res);
+				}
+			})
+      .catch((err) => {
+				console.log(err);
+      })
 	};
 }

@@ -43,6 +43,22 @@ var addDoc = (db, res, doc, collection) => {
 	});
 }
 
+var delDoc = (db, res, docId, collection) => {
+	db.collection(collection).deleteOne({ _id: docId }, (err, result) => {
+		assert.equal(err, null);
+    assert.equal(1, result.result.n);
+		db.close();
+		res.send({stts: 'ok'});
+	});
+}
+
+var delCateg = (db, res, docId) => {
+	db.collection('goods').updateMany({ categ: docId }, {$set:{categ:0}}, (err, result) => {
+		assert.equal(err, null);
+		delDoc(db, res, docId, 'categs');
+	});
+}
+
 app.post('/*', (req, res) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
@@ -68,6 +84,22 @@ app.post('/*', (req, res) => {
 			MongoClient.connect(url, (err, db) => {
 				assert.equal(null, err);
 				addDoc(db, res, req.body.good, 'goods');
+			});
+		case 'del_categ':
+			if(!req.body.hasOwnProperty('categId')){
+				return false;
+			}
+			MongoClient.connect(url, (err, db) => {
+				assert.equal(null, err);
+				delCateg(db, res, req.body.categId);
+			});
+		case 'del_good':
+			if(!req.body.hasOwnProperty('goodId')){
+				return false;
+			}
+			MongoClient.connect(url, (err, db) => {
+				assert.equal(null, err);
+				delDoc(db, res, req.body.goodId, 'goods');
 			});
 	}
 });

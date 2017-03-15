@@ -29,8 +29,21 @@ export function editGood(good) {
   };
 }
 export function delGood(id) {
-  return {
-    type: 'DEL_GOOD',
-    id: id
+  return (dispatch) => {
+		axios.post('/',{f:'del_good',goodId:id})
+      .then((res) => {
+				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
+					dispatch({
+						type: 'DEL_GOOD',
+						id: id
+					});
+				}
+				else{
+					console.log(res);
+				}
+			})
+      .catch((err) => {
+				console.log(err);
+      })
   };
 }
