@@ -21,8 +21,10 @@ export function fetchData(dbConnOk) {
 }
 export function addCateg(name) {
   return (dispatch) => {
+		dispatch({type: 'FETCHING_STATE',state:true});
 		axios.post('/',{f:'add_categ',categ:{name:name}})
       .then((res) => {
+				dispatch({type: 'FETCHING_STATE',state:false});
 				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
 					dispatch({
 						type: 'ADD_CATEG',
@@ -37,14 +39,17 @@ export function addCateg(name) {
 				}
 			})
       .catch((err) => {
+				dispatch({type: 'FETCHING_STATE',state:false});
 				console.log(err);
       })
   };
 }
 export function delCateg(id) {
   return (dispatch) => {
+		dispatch({type: 'FETCHING_STATE',state:true});
 		axios.post('/',{f:'del_categ',categId:id})
       .then((res) => {
+				dispatch({type: 'FETCHING_STATE',state:false});
 				if(res.data.hasOwnProperty('stts') && res.data.stts === 'ok'){
 					dispatch({
 						type: 'DEL_CATEG',
@@ -60,6 +65,7 @@ export function delCateg(id) {
 				}
 			})
       .catch((err) => {
+				dispatch({type: 'FETCHING_STATE',state:false});
 				console.log(err);
       })
 	};

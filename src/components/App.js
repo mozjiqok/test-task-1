@@ -46,7 +46,7 @@ class App extends React.Component {
 	}
 	
   render() {
-		const { goods, categs, addCateg, addGood, delCateg, delGood, editGood } = this.props;
+		const { goods, categs, addCateg, addGood, delCateg, delGood, editGood, fetchingState } = this.props;
 		const { showAddCateg, showAddGood, filter, dbConnected } = this.state;
 		
 		const addCategForm = showAddCateg ?
@@ -57,6 +57,18 @@ class App extends React.Component {
 		const addGoodForm = showAddGood ?
 			<AddGoodForm showAddGood={this.showAddGood.bind(this)}
 				addGood={addGood} categs={categs} />
+			: [];
+		
+		const fetchScreen = fetchingState ?
+			<div className="modal">
+				<div className="modal-dialog modal-sm">
+					<div className="modal-content">
+						<div className="modal-body text-center">
+							Сохранение...
+						</div>
+					</div>
+				</div>
+			</div>
 			: [];
 			
 		const bottomPart = dbConnected ? 
@@ -76,6 +88,7 @@ class App extends React.Component {
 		
     return (
       <div className="container">
+				{fetchScreen}
 				{addCategForm}
 				{addGoodForm}
 				<div className="appTop">
@@ -97,6 +110,7 @@ class App extends React.Component {
 App.propTypes = {
 	goods: React.PropTypes.array.isRequired,
 	categs: React.PropTypes.array.isRequired,
+	fetchingState: React.PropTypes.bool.isRequired,
 	addCateg: React.PropTypes.func.isRequired,
 	delCateg: React.PropTypes.func.isRequired,
 	addGood: React.PropTypes.func.isRequired,
@@ -108,7 +122,8 @@ App.propTypes = {
 function mapStoreToProps(store) {
 	return {
 		goods: store.goods,
-		categs: store.categs
+		categs: store.categs,
+		fetchingState: store.fetchingState
 	}
 }
 
