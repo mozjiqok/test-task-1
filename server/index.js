@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import { MongoClient } from 'mongodb';
 import assert from 'assert';
 import bodyParser from 'body-parser';
@@ -7,6 +8,7 @@ var url = 'mongodb://localhost:27017/test';
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname,'/../build')));
 
 var fetchData = (db, res) => {
   const cursor = db.collection('goods').find({});
@@ -120,4 +122,4 @@ app.post('/*', (req, res) => {
 	}
 });
 
-app.listen(9000, () => console.log('Running on localhost:9000'));
+app.listen(80, () => console.log('Running on localhost'));
