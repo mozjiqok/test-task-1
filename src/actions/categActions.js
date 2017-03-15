@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export function fetchData() {
+export function fetchData(dbConnOk) {
   return (dispatch) => {
 		axios.post('/',{f:'fetch'})
       .then((res) => {
@@ -12,6 +12,7 @@ export function fetchData() {
 					type: 'FETCH_CATEGS',
 					categs: res.data.categs
 				});
+				dbConnOk();
 			})
       .catch((err) => {
 				console.log(err);

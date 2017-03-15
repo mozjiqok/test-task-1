@@ -13,9 +13,10 @@ class App extends React.Component {
 		this.setState({
 			showAddCateg:false,
 			showAddGood:false,
-			filter: 0
+			filter: 0,
+			dbConnected: false
 		});
-		this.props.fetchData();
+		this.props.fetchData(this.dbConnOk.bind(this));
 	}
 	
 	showAddCateg(action){
@@ -40,9 +41,13 @@ class App extends React.Component {
 		});
 	}
 	
+	dbConnOk(){
+		this.setState({dbConnected:true});
+	}
+	
   render() {
 		const { goods, categs, addCateg, addGood, delCateg, delGood, editGood } = this.props;
-		const { showAddCateg, showAddGood, filter } = this.state;
+		const { showAddCateg, showAddGood, filter, dbConnected } = this.state;
 		
 		const addCategForm = showAddCateg ?
 			<AddCategForm showAddCateg={this.showAddCateg.bind(this)}
@@ -53,6 +58,21 @@ class App extends React.Component {
 			<AddGoodForm showAddGood={this.showAddGood.bind(this)}
 				addGood={addGood} categs={categs} />
 			: [];
+			
+		const bottomPart = dbConnected ? 
+			<div className="appBottom">
+				<div className="appCategList">
+					<CategList categs={categs} delCateg={delCateg}
+						setFilter={this.setFilter.bind(this)}
+					/>
+				</div>
+				<div className="appGoods">
+					<GoodsTable goods={goods} delGood={delGood} editGood={editGood}
+						categs={categs} filter={filter}
+					/>
+				</div>
+			</div>
+			: <div>Подключение...</div>;
 		
     return (
       <div className="container">
@@ -67,18 +87,7 @@ class App extends React.Component {
 						<button className="btn btn-default" onClick={this.addCategClick.bind(this)}>Добавить категорию</button>
 					</div>
 				</div>
-				<div className="appBottom">
-					<div className="appCategList">
-						<CategList categs={categs} delCateg={delCateg}
-							setFilter={this.setFilter.bind(this)}
-						/>
-					</div>
-					<div className="appGoods">
-						<GoodsTable goods={goods} delGood={delGood} editGood={editGood}
-							categs={categs} filter={filter}
-						/>
-					</div>
-				</div>
+				{bottomPart}
       </div>
     );
   }
