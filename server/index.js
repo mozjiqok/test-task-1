@@ -59,6 +59,14 @@ var delCateg = (db, res, docId) => {
 	});
 }
 
+var editDoc = (db, res, doc, collection) => {
+	db.collection(collection).updateOne({ _id: doc.id }, {$set:Object.assign(doc,{id:undefined})}, (err, result) => {
+		assert.equal(err, null);
+		db.close();
+		res.send({stts: 'ok'});
+	});
+}
+
 app.post('/*', (req, res) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
@@ -100,6 +108,14 @@ app.post('/*', (req, res) => {
 			MongoClient.connect(url, (err, db) => {
 				assert.equal(null, err);
 				delDoc(db, res, req.body.goodId, 'goods');
+			});
+		case 'edit_good':
+			if(!req.body.hasOwnProperty('good')){
+				return false;
+			}
+			MongoClient.connect(url, (err, db) => {
+				assert.equal(null, err);
+				editDoc(db, res, req.body.good, 'goods');
 			});
 	}
 });
