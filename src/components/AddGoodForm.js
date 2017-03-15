@@ -6,8 +6,8 @@ class AddGoodForm extends React.Component {
 		this.setState({
 			categ:'0',
 			name:'',
-			cost:'0',
-			price:'0'
+			cost:'',
+			price:''
 		});
 	}
 	
@@ -25,8 +25,8 @@ class AddGoodForm extends React.Component {
 		this.props.addGood({
 			categ: parseInt(good.categ,10),
 			name: good.name,
-			price: parseFloat(good.price.replace(",","."),10),
-			cost: parseFloat(good.cost.replace(",","."),10)
+			price: isNaN(+good.price)?0:+good.price,
+			cost: isNaN(+good.cost)?0:+good.price
 		});
 		this.props.showAddGood(false);
 	}
