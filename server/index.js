@@ -75,15 +75,15 @@ var editDoc = (db, res, doc, collection) => {
 var validateRegisterData = (email, pass, conf, res) => {
 	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if(!re.test(email)){
-		res.send({error: "Неверный формат email"});
+		res.status(400).send({errors: {login: "Неверный формат email"}});
 		return false;
 	}
 	if((""+pass).length < 8){
-		res.send({error: "Пароль должен быть минимум 8 символов"});
+		res.status(400).send({errors: {pass: "Пароль должен быть минимум 8 символов"}});
 		return false;
 	}
 	if(pass !== conf){
-		res.send({error: "Пароль не совпадает с подтверждением"});
+		res.status(400).send({errors: {conf: "Пароль не совпадает с подтверждением"}});
 		return false;
 	}
 	MongoClient.connect(url, (err, db) => {
@@ -91,7 +91,7 @@ var validateRegisterData = (email, pass, conf, res) => {
 		db.collection('users').find({email:email}).toArray((err,docs) => {
 			assert.equal(null, err);
 			if(docs.length > 0){
-				res.send({error: "Пользователь с таким email уже зарегистрирован"});
+				res.status(400).send({errors: {login: "Пользователь с таким email уже зарегистрирован"}});
 				db.close();
 			}
 			else{
@@ -110,14 +110,14 @@ var registerUser = (email, pass, res, db) => {
 	});
 }
 
-var authenticateUser = (email, pass, res) => {
+var login = (email, pass, res) => {
 	MongoClient.connect(url, (err, db) => {
 		assert.equal(null, err);
 		db.collection('users').find({email:email}).toArray((err,docs) => {
 			assert.equal(err, null);
 			db.close();
 			if(docs.length === 0){
-				res.send({error: "Пользователь с таким email не зарегистрирован"});
+				res.status(400).send({errors: {login: "Пользователь с таким email не зарегистрирован"}});
 				return false;
 			}
 			if(bcrypt.compareSync(pass, docs[0].passHash)){
@@ -129,7 +129,7 @@ var authenticateUser = (email, pass, res) => {
 				});
 			}
 			else{
-				res.send({error: "Неверные данные"});
+				res.status(400).send({errors: {pass: "Неверные данные"}});
 			}
 		});
 	});
@@ -142,7 +142,7 @@ var resetPass = (email) => {
 			assert.equal(err, null);
 			db.close();
 			if(docs.length === 0){
-				res.send({error: "Пользователь с таким email не зарегистрирован"});
+				res.status(400).send({errors: {login: "Пользователь с таким email не зарегистрирован"}});
 				return false;
 			}
 			const newPass = Math.random().toString(36).slice(-8);
@@ -226,13 +226,13 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				editDoc(db, res, req.body.good, 'goods');
 			});
-		case 'regUser':
+		case 'reg_user':
 			var { email, pass, conf } = req.body;
 			validateRegisterData(email, pass, conf, res);
-		case 'logIn':
-			var { email, pass } = req.body;
-			authenticateUser(email, pass, res);
-		case 'resetPass':
+		case 'login':
+			var { email, pass } = req.body.userData;
+			login(email, pass, res);
+		case 'reset_pass':
 			var { email } = req.body;
 			resetPass(email);
 	}
