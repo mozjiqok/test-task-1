@@ -1,7 +1,7 @@
 import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
 import { connect } from 'react-redux';
-import { register } from '../actions/userActions';
+import { register, setCurrentUser } from '../actions/userActions';
 import isEmpty from 'lodash/isEmpty';
 
 function validateInput(data) {
@@ -58,7 +58,10 @@ class RegistrationPage extends React.Component {
       this.setState({ errors: {}, isLoading: true });
 			const { email, pass, conf } = this.state;
       this.props.register({email, pass, conf}).then(
-        (res) => this.context.router.push('/app'),
+        (res) => {
+					this.props.setCurrentUser({authToken:res.data.authToken,email});
+					this.context.router.push('/')
+				},
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
     }
@@ -113,11 +116,12 @@ class RegistrationPage extends React.Component {
 }
 
 RegistrationPage.propTypes = {
-  register: React.PropTypes.func.isRequired
+  register: React.PropTypes.func.isRequired,
+  setCurrentUser: React.PropTypes.func.isRequired
 }
 
 RegistrationPage.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
 
-export default connect(null, { register })(RegistrationPage);
+export default connect(null, { register, setCurrentUser })(RegistrationPage);

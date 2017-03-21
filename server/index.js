@@ -103,10 +103,11 @@ var validateRegisterData = (email, pass, conf, res) => {
 
 var registerUser = (email, pass, res, db) => {
 	const passHash = bcrypt.hashSync(pass, 10);
-	db.collection('users').insertOne({email, passHash}, (err, result) => {
+	const authToken = hat();
+	db.collection('users').insertOne({email, passHash, authToken}, (err, result) => {
 		assert.equal(err, null);
 		db.close();
-		res.send({stts: 'ok'});
+		res.send({authToken});
 	});
 }
 
