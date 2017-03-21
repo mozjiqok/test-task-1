@@ -186,6 +186,7 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				fetchData(db, res);
 			});
+			break;
 		case 'add_categ':
 			if(!req.body.hasOwnProperty('categ')){
 				return false;
@@ -194,6 +195,7 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				addDoc(db, res, req.body.categ, 'categs');
 			});
+			break;
 		case 'add_good':
 			if(!req.body.hasOwnProperty('good')){
 				return false;
@@ -202,6 +204,7 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				addDoc(db, res, req.body.good, 'goods');
 			});
+			break;
 		case 'del_categ':
 			if(!req.body.hasOwnProperty('categId')){
 				return false;
@@ -210,6 +213,7 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				delCateg(db, res, req.body.categId);
 			});
+			break;
 		case 'del_good':
 			if(!req.body.hasOwnProperty('goodId')){
 				return false;
@@ -218,6 +222,7 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				delDoc(db, res, req.body.goodId, 'goods');
 			});
+			break;
 		case 'edit_good':
 			if(!req.body.hasOwnProperty('good')){
 				return false;
@@ -226,15 +231,18 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				editDoc(db, res, req.body.good, 'goods');
 			});
+			break;
 		case 'reg_user':
 			var { email, pass, conf } = req.body;
 			validateRegisterData(email, pass, conf, res);
+			break;
 		case 'login':
 			var { email, pass } = req.body.userData;
 			login(email, pass, res);
+			break;
 		case 'reset_pass':
 			var { email } = req.body;
-			resetPass(email);
+			resetPass(email, res);
 	}
 });
 
