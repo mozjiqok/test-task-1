@@ -129,7 +129,7 @@ var login = (email, pass, res) => {
 			}
 			else{
 				db.close();
-				res.status(400).send({errors: {pass: "Неверные данные"}});
+				res.status(400).send({errors: {form: "Неверные данные"}});
 			}
 		});
 	});
@@ -166,7 +166,7 @@ var resetPass = (email) => {
 				transporter.sendMail(mailOptions, function(error, info){
 					if(error){
 						console.log(error);
-						res.send({error: "Не удалось отправить новый пароль на почту."});
+						res.send({errors: {form: "Не удалось отправить новый пароль на почту."}});
 					}else{
 						res.send({stts: "ok"});
 					};
