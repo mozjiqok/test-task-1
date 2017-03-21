@@ -177,10 +177,34 @@ var resetPass = (email) => {
 	});
 }
 
-app.post('/*', (req, res) => {
+var authenticate = (req, res, next) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
 	}
+	if(['fetch','add_categ','add_good','del_categ','del_good','edit_good'].indexOf(req.body.f) !== -1){
+		const auth = req.headers['authorization'];
+		const parts = auth.split(' ');
+		if(parts.length !== 2){
+			return false;
+		}
+		const [ email, token ] = parts;
+		MongoClient.connect(url, (err, db) => {
+			assert.equal(null, err);
+			db.collection('users').find({email:email}).toArray((err,docs) => {
+				assert.equal(null, err);
+				if(docs.length === 0 || docs[0].authToken !== token){
+					return false;
+				}
+				next();
+			});
+		});
+	}
+	else{
+		next();
+	}
+}
+
+app.post('/*', authenticate, (req, res) => {
 	switch(req.body.f){
 		case 'fetch':
 			MongoClient.connect(url, (err, db) => {
