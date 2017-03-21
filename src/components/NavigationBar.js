@@ -46,6 +46,9 @@ class NavigationBar extends React.Component {
 					<li>
 						<Link to="/login"><span className="glyphicon glyphicon-log-in"></span> Войти</Link>
 					</li>
+					<li>
+						<Link to="/reg"><span className="glyphicon glyphicon-registration-mark"></span> Регистрация</Link>
+					</li>
 				</ul>
 			</div>
     );
