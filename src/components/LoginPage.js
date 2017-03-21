@@ -3,6 +3,7 @@ import TextFieldGroup from './TextFieldGroup';
 import { connect } from 'react-redux';
 import { login, setCurrentUser } from '../actions/userActions';
 import isEmpty from 'lodash/isEmpty';
+import { Link } from 'react-router';
 
 function validateInput(data) {
   var errors = {};
@@ -93,6 +94,8 @@ class LoginPage extends React.Component {
 						onChange={this.onChange}
 						type="password"
 					/>
+					
+					<p><Link to="/reset_pass">Забыли пароль?</Link></p>
 
 					<div className="form-group"><button className="btn btn-primary btn-lg" disabled={isLoading}>Войти</button></div>
 				</form>
