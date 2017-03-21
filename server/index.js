@@ -75,7 +75,7 @@ var editDoc = (db, res, doc, collection) => {
 var validateRegisterData = (email, pass, conf, res) => {
 	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if(!re.test(email)){
-		res.status(400).send({errors: {login: "Неверный формат email"}});
+		res.status(400).send({errors: {email: "Неверный формат email"}});
 		return false;
 	}
 	if((""+pass).length < 8){
@@ -91,7 +91,7 @@ var validateRegisterData = (email, pass, conf, res) => {
 		db.collection('users').find({email:email}).toArray((err,docs) => {
 			assert.equal(null, err);
 			if(docs.length > 0){
-				res.status(400).send({errors: {login: "Пользователь с таким email уже зарегистрирован"}});
+				res.status(400).send({errors: {email: "Пользователь с таким email уже зарегистрирован"}});
 				db.close();
 			}
 			else{
@@ -117,7 +117,7 @@ var login = (email, pass, res) => {
 			assert.equal(err, null);
 			db.close();
 			if(docs.length === 0){
-				res.status(400).send({errors: {login: "Пользователь с таким email не зарегистрирован"}});
+				res.status(400).send({errors: {email: "Пользователь с таким email не зарегистрирован"}});
 				return false;
 			}
 			if(bcrypt.compareSync(pass, docs[0].passHash)){
@@ -142,7 +142,7 @@ var resetPass = (email) => {
 			assert.equal(err, null);
 			db.close();
 			if(docs.length === 0){
-				res.status(400).send({errors: {login: "Пользователь с таким email не зарегистрирован"}});
+				res.status(400).send({errors: {email: "Пользователь с таким email не зарегистрирован"}});
 				return false;
 			}
 			const newPass = Math.random().toString(36).slice(-8);
@@ -233,7 +233,7 @@ app.post('/*', (req, res) => {
 			});
 			break;
 		case 'reg_user':
-			var { email, pass, conf } = req.body;
+			var { email, pass, conf } = req.body.userData;
 			validateRegisterData(email, pass, conf, res);
 			break;
 		case 'login':
@@ -241,7 +241,7 @@ app.post('/*', (req, res) => {
 			login(email, pass, res);
 			break;
 		case 'reset_pass':
-			var { email } = req.body;
+			var { email } = req.body.userData;
 			resetPass(email, res);
 	}
 });
