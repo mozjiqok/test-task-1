@@ -51,9 +51,9 @@ class LoginPage extends React.Component {
     e.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
-			const toSend = {login:this.state.login,pass:this.state.pass};
-      this.props.login(toSend).then(
-        (res) => this.context.router.push('/order'),
+			const { login, pass } = this.state;
+      this.props.login(login, pass).then(
+        (res) => this.context.router.push('/app'),
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
     }
