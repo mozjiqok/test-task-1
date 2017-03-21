@@ -115,7 +115,6 @@ var login = (email, pass, res) => {
 		assert.equal(null, err);
 		db.collection('users').find({email:email}).toArray((err,docs) => {
 			assert.equal(err, null);
-			db.close();
 			if(docs.length === 0){
 				res.status(400).send({errors: {email: "Пользователь с таким email не зарегистрирован"}});
 				return false;
@@ -129,6 +128,7 @@ var login = (email, pass, res) => {
 				});
 			}
 			else{
+				db.close();
 				res.status(400).send({errors: {pass: "Неверные данные"}});
 			}
 		});
