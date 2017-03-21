@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 import assert from 'assert';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
+import hat from 'hat';
 
 var url = 'mongodb://localhost:27017/test';
 
@@ -108,6 +109,31 @@ var registerUser = (email, pass, res, db) => {
 	});
 }
 
+var authenticateUser = (email, pass, res) => {
+	MongoClient.connect(url, (err, db) => {
+		assert.equal(null, err);
+		db.collection('users').find({email:email}).toArray((err,docs) => {
+			assert.equal(err, null);
+			db.close();
+			if(docs.length === 0){
+				res.send({error: "Пользователь с таким email не зарегистрирован"});
+				return false;
+			}
+			if(bcrypt.compareSync(pass, docs[0].passHash)){
+				const authToken = hat();
+				db.collection('users').updateOne({ email: email }, {$set:{authToken:authToken}}, (err, result) => {
+					assert.equal(err, null);
+					db.close();
+					res.send({authToken: authToken});
+				});
+			}
+			else{
+				res.send({error: "Неверные данные"});
+			}
+		});
+	});
+}
+
 app.post('/*', (req, res) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
@@ -159,8 +185,11 @@ app.post('/*', (req, res) => {
 				editDoc(db, res, req.body.good, 'goods');
 			});
 		case 'regUser':
-			const { email, pass, conf } = req.body;
+			var { email, pass, conf } = req.body;
 			validateRegisterData(email, pass, conf, res);
+		case 'logIn':
+			var { email, pass } = req.body;
+			authenticateUser(email, pass, res);
 	}
 });
 
