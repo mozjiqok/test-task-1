@@ -8,7 +8,9 @@ export default (state = initialState, action = {}) => {
     case 'SET_CURRENT_USER':
       return {
         authenticated: action.authenticated,
-        info: action.info
+        info: {
+					email: action.email
+				}
       };
     default: return state;
 	}

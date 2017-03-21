@@ -1,7 +1,7 @@
 import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
 import { connect } from 'react-redux';
-import { login } from '../actions/userActions';
+import { login, setCurrentUser } from '../actions/userActions';
 import isEmpty from 'lodash/isEmpty';
 
 function validateInput(data) {
@@ -53,7 +53,10 @@ class LoginPage extends React.Component {
       this.setState({ errors: {}, isLoading: true });
 			const { email, pass } = this.state;
       this.props.login({email, pass}).then(
-        (res) => this.context.router.push('/app'),
+        (res) => {
+					this.props.setCurrentUser({authToken:res.data.authToken,email});
+					this.context.router.push('/');
+				},
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
     }
@@ -99,11 +102,12 @@ class LoginPage extends React.Component {
 }
 
 LoginPage.propTypes = {
-  login: React.PropTypes.func.isRequired
+  login: React.PropTypes.func.isRequired,
+  setCurrentUser: React.PropTypes.func.isRequired
 }
 
 LoginPage.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
 
-export default connect(null, { login })(LoginPage);
+export default connect(null, { login, setCurrentUser })(LoginPage);
