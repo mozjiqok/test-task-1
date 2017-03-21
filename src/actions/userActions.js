@@ -35,3 +35,9 @@ export function logout() {
 		});
   }
 }
+
+export function resetPassword(userData) {
+	return dispatch => {
+		return axios.post('/',{f:'reset_pass',userData});
+	}
+}
