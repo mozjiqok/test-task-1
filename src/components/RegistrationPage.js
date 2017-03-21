@@ -57,7 +57,7 @@ class RegistrationPage extends React.Component {
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
 			const { login, pass, conf } = this.state;
-      this.props.register(login, pass, conf).then(
+      this.props.register({login, pass, conf}).then(
         (res) => this.context.router.push('/app'),
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
