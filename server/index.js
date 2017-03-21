@@ -136,14 +136,14 @@ var login = (email, pass, res) => {
 	});
 }
 
-var resetPass = (email) => {
+var resetPass = (email, res) => {
 	MongoClient.connect(url, (err, db) => {
 		assert.equal(null, err);
 		db.collection('users').find({email:email}).toArray((err,docs) => {
 			assert.equal(err, null);
-			db.close();
 			if(docs.length === 0){
 				res.status(400).send({errors: {email: "Пользователь с таким email не зарегистрирован"}});
+				db.close();
 				return false;
 			}
 			const newPass = Math.random().toString(36).slice(-8);
