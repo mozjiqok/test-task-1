@@ -13,6 +13,7 @@
     "body-parser": "^1.17.1",
     "hat": "0.0.3",
     "mongodb": "^2.2.24",
+    "nodemailer": "^3.1.7",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.3",

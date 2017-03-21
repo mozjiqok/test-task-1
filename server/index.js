@@ -5,6 +5,7 @@ import assert from 'assert';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import hat from 'hat';
+import nodemailer from 'nodemailer';
 
 var url = 'mongodb://localhost:27017/test';
 
@@ -134,6 +135,47 @@ var authenticateUser = (email, pass, res) => {
 	});
 }
 
+var resetPass = (email) => {
+	MongoClient.connect(url, (err, db) => {
+		assert.equal(null, err);
+		db.collection('users').find({email:email}).toArray((err,docs) => {
+			assert.equal(err, null);
+			db.close();
+			if(docs.length === 0){
+				res.send({error: "Пользователь с таким email не зарегистрирован"});
+				return false;
+			}
+			const newPass = Math.random().toString(36).slice(-8);
+			const newPassHash = bcrypt.hashSync(newPass, 10);
+			db.collection('users').updateOne({ email: email }, {$set:{passHash:newPassHash,authToken:null}}, (err, result) => {
+				assert.equal(err, null);
+				db.close();
+				var transporter = nodemailer.createTransport({
+					service: 'Gmail',
+					auth: {
+						user: 'fortestingreason@gmail.com', // Your email id
+						pass: 'forTE$TING' // Your password
+					}
+				});
+				const mailOptions = {
+					from: '<fortestingreason@gmail.com>', // sender address
+					to: email, // list of receivers
+					subject: 'New password', // Subject line
+					text: 'Ваш новый пароль: ' + newPass
+				};
+				transporter.sendMail(mailOptions, function(error, info){
+					if(error){
+						console.log(error);
+						res.send({error: "Не удалось отправить новый пароль на почту."});
+					}else{
+						res.send({stts: "ok"});
+					};
+				});
+			});
+		});
+	});
+}
+
 app.post('/*', (req, res) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
@@ -190,6 +232,9 @@ app.post('/*', (req, res) => {
 		case 'logIn':
 			var { email, pass } = req.body;
 			authenticateUser(email, pass, res);
+		case 'resetPass':
+			var { email } = req.body;
+			resetPass(email);
 	}
 });
 
