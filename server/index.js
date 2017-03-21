@@ -3,6 +3,7 @@ import path from 'path';
 import { MongoClient } from 'mongodb';
 import assert from 'assert';
 import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
 
 var url = 'mongodb://localhost:27017/test';
 
@@ -69,6 +70,44 @@ var editDoc = (db, res, doc, collection) => {
 	});
 }
 
+var validateRegisterData = (email, pass, conf, res) => {
+	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if(!re.test(email)){
+		res.send({error: "Неверный формат email"});
+		return false;
+	}
+	if((""+pass).length < 8){
+		res.send({error: "Пароль должен быть минимум 8 символов"});
+		return false;
+	}
+	if(pass !== conf){
+		res.send({error: "Пароль не совпадает с подтверждением"});
+		return false;
+	}
+	MongoClient.connect(url, (err, db) => {
+		assert.equal(null, err);
+		db.collection('users').find({email:email}).toArray((err,docs) => {
+			assert.equal(null, err);
+			if(docs.length > 0){
+				res.send({error: "Пользователь с таким email уже зарегистрирован"});
+				db.close();
+			}
+			else{
+				registerUser(email, pass, res, db);
+			}
+		});
+	});
+}
+
+var registerUser = (email, pass, res, db) => {
+	const passHash = bcrypt.hashSync(pass, 10);
+	db.collection('users').insertOne({email, passHash}, (err, result) => {
+		assert.equal(err, null);
+		db.close();
+		res.send({stts: 'ok'});
+	});
+}
+
 app.post('/*', (req, res) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
@@ -119,6 +158,9 @@ app.post('/*', (req, res) => {
 				assert.equal(null, err);
 				editDoc(db, res, req.body.good, 'goods');
 			});
+		case 'regUser':
+			const { email, pass, conf } = req.body;
+			validateRegisterData(email, pass, conf, res);
 	}
 });
 
