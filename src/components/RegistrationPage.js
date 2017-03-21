@@ -98,7 +98,7 @@ class RegistrationPage extends React.Component {
 
 					<TextFieldGroup
 						field="conf"
-						label="Пароль"
+						label="Пароль еще раз"
 						value={conf}
 						error={errors.conf}
 						onChange={this.onChange}
