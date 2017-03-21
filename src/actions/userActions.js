@@ -14,7 +14,7 @@ export function register(userData) {
 
 export function setCurrentUser(data) {
 	localStorage.setItem('authToken', data.authToken);
-	localStorage.setItem('login', data.email);
+	localStorage.setItem('email', data.email);
 	const token = data.email + ' ' + data.authToken;
 	axios.defaults.headers.common['Authorization'] = `${token}`;
 	return {
@@ -22,4 +22,16 @@ export function setCurrentUser(data) {
 		authenticated:true,
 		email:data.email
 	};
+}
+
+export function logout() {
+  return dispatch => {
+    localStorage.removeItem('authToken');
+    delete axios.defaults.headers.common['Authorization'];
+		dispatch({
+			type:'SET_CURRENT_USER',
+			authenticated:false,
+			email:null
+		});
+  }
 }
