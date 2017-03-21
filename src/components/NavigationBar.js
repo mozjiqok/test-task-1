@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { logout } from '../actions/userActions';
 
 class NavigationBar extends React.Component {
 	
@@ -71,10 +72,15 @@ class NavigationBar extends React.Component {
   }
 }
 
+NavigationBar.propTypes = {
+  logout: React.PropTypes.func.isRequired,
+  user: React.PropTypes.object.isRequired
+}
+
 function mapStateToProps(state) {
   return {
     user: state.user
   };
 }
 
-export default connect(mapStateToProps)(NavigationBar);
+export default connect(mapStateToProps, { logout })(NavigationBar);
