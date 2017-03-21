@@ -8,8 +8,8 @@ function validateInput(data) {
   var errors = {};
 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  if (!re.test(data.login)) {
-    errors.login = 'Неверный формат';
+  if (!re.test(data.email)) {
+    errors.email = 'Неверный формат';
   }
 
   if (("" + data.pass).length < 1) {
@@ -31,7 +31,7 @@ class RegistrationPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: '',
+      email: '',
       pass: '',
       conf: '',
       errors: {},
@@ -56,8 +56,8 @@ class RegistrationPage extends React.Component {
     e.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
-			const { login, pass, conf } = this.state;
-      this.props.register({login, pass, conf}).then(
+			const { email, pass, conf } = this.state;
+      this.props.register({email, pass, conf}).then(
         (res) => this.context.router.push('/app'),
         (err) => this.setState({ errors: err.response.data.errors, isLoading: false })
       );
@@ -69,7 +69,7 @@ class RegistrationPage extends React.Component {
   }
 
   render() {
-    const { errors, login, pass, conf, isLoading } = this.state;
+    const { errors, email, pass, conf, isLoading } = this.state;
 
     return (
 			<div className="col-md-offset-4 col-md-4">
@@ -80,10 +80,10 @@ class RegistrationPage extends React.Component {
 
 					<TextFieldGroup
 						autoFocus={true}
-						field="login"
+						field="email"
 						label="Email"
-						value={login}
-						error={errors.login}
+						value={email}
+						error={errors.email}
 						onChange={this.onChange}
 					/>
 
