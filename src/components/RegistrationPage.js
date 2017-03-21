@@ -12,12 +12,12 @@ function validateInput(data) {
     errors.email = 'Неверный формат';
   }
 
-  if (("" + data.pass).length < 1) {
-    errors.pass = 'Это обязательное поле';
+  if (("" + data.pass).length < 8) {
+    errors.pass = 'Пароль должен быть минимум 8 символов';
   }
 
-  if (("" + data.conf).length < 1) {
-    errors.conf = 'Это обязательное поле';
+  if (data.conf !== data.pass) {
+    errors.conf = 'Пароль не совпадает с подтверждением';
   }
 
   return {
