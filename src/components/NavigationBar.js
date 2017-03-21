@@ -31,7 +31,7 @@ class NavigationBar extends React.Component {
 			<div onClick={this.hideMenu.bind(this)} className={"navbar-collapse collapse" + navClass}>
 				<ul className="nav navbar-nav navbar-right">
 					<li>
-						{info.email} <span className="glyphicon glyphicon-user"></span>
+						<a href="#">{info.email} <span className="glyphicon glyphicon-user"></span></a>
 					</li>
 					<li>
 						<a href="#" onClick={this.logout.bind(this)}>Выйти <span className="glyphicon glyphicon-log-out"></span></a>
