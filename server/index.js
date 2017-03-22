@@ -181,7 +181,17 @@ var authenticate = (req, res, next) => {
 	if(!req.body.hasOwnProperty('f')){
 		return false;
 	}
-	if(['fetch','add_categ','add_good','del_categ','del_good','edit_good'].indexOf(req.body.f) !== -1){
+	if([
+		'fetch',
+		'add_categ',
+		'add_good',
+		'del_categ',
+		'del_good',
+		'edit_good',
+		'edit_user_info',
+		'change_pass',
+		'fetch_user'
+	].indexOf(req.body.f) !== -1){
 		const auth = req.headers['authorization'];
 		const parts = auth.split(' ');
 		if(parts.length !== 2){
@@ -202,6 +212,17 @@ var authenticate = (req, res, next) => {
 	else{
 		next();
 	}
+}
+
+var editUserInfo = (email, fname, lname, res) => {
+	MongoClient.connect(url, (err, db) => {
+		assert.equal(null, err);
+		db.collection('users').updateOne({ email }, {$set:{fname, lname}}, (err, result) => {
+			assert.equal(err, null);
+			db.close();
+			res.send({success: 'Информация успешно обновлена'});
+		});
+	});
 }
 
 app.post('/*', authenticate, (req, res) => {
@@ -289,6 +310,30 @@ app.post('/*', authenticate, (req, res) => {
 			}
 			var { email } = req.body.userData;
 			resetPass(email, res);
+			break;
+		case 'edit_user_info':
+			if(
+				!req.body.hasOwnProperty('userData') ||
+				!req.body.userData.hasOwnProperty('fname') ||
+				!req.body.userData.hasOwnProperty('lname') ||
+				!req.body.userData.hasOwnProperty('email')
+			){
+				return false;
+			}
+			var { email, fname, lname } = req.body.userData;
+			editUserInfo(email, fname, lname, res);
+			break;
+		case 'fetch_user':
+			MongoClient.connect(url, (err, db) => {
+				assert.equal(null, err);
+				const email = req.headers['authorization'].split(' ')[0];
+				db.collection('users').find({email}).toArray((err,docs) => {
+					assert.equal(null, err);
+					const {fname, lname} = docs[0];
+					res.send({fname, lname});
+					db.close();
+				});
+			});
 	}
 });
 
