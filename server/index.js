@@ -167,7 +167,7 @@ var resetPass = (email, res) => {
 				transporter.sendMail(mailOptions, function(error, info){
 					if(error){
 						console.log(error);
-						res.send({errors: {form: "Не удалось отправить новый пароль на почту."}});
+						res.status(400).send({errors: {form: "Не удалось отправить новый пароль на почту."}});
 					}else{
 						res.send({stts: "ok"});
 					};
@@ -221,6 +221,39 @@ var editUserInfo = (email, fname, lname, res) => {
 			assert.equal(err, null);
 			db.close();
 			res.send({success: 'Информация успешно обновлена'});
+		});
+	});
+}
+
+var changePass = (email, oldp, newp, conf, res) => {
+  if (("" + newp).length < 8) {
+    res.status(400).send({errors: {newp: 'Пароль должен быть минимум 8 символов'}});
+		return false;
+  }
+	else if (oldp === newp) {
+    res.status(400).send({errors: {newp: 'Пароль не изменился'}});
+		return false;
+  }
+  if (conf !== newp) {
+    res.status(400).send({errors: {conf: 'Пароль не совпадает с подтверждением'}});
+		return false;
+  }
+	MongoClient.connect(url, (err, db) => {
+		assert.equal(null, err);
+		db.collection('users').find({email:email}).toArray((err,docs) => {
+			assert.equal(err, null);
+			if(!bcrypt.compareSync(oldp, docs[0].passHash)){
+				db.close();
+				res.status(400).send({errors: {oldp: 'Неверный пароль'}});
+				return false;
+			}
+			const newPassHash = bcrypt.hashSync(newp, 10);
+			const authToken = hat();
+			db.collection('users').updateOne({ email: email }, {$set:{passHash:newPassHash,authToken}}, (err, result) => {
+				assert.equal(err, null);
+				db.close();
+				res.send({success:'Пароль успешно изменен',authToken});
+			});
 		});
 	});
 }
@@ -334,6 +367,19 @@ app.post('/*', authenticate, (req, res) => {
 					db.close();
 				});
 			});
+			break;
+		case 'change_pass':
+			if(
+				!req.body.hasOwnProperty('userData') ||
+				!req.body.userData.hasOwnProperty('oldp') ||
+				!req.body.userData.hasOwnProperty('newp') ||
+				!req.body.userData.hasOwnProperty('conf')
+			){
+				return false;
+			}
+			var { oldp, newp, conf } = req.body.userData;
+			var email = req.headers['authorization'].split(' ')[0];
+			changePass(email, oldp, newp, conf, res);
 	}
 });
 
