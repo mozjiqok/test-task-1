@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import LoginPage from './components/LoginPage';
 import RegistrationPage from './components/RegistrationPage';
 import ResetPasswordPage from './components/ResetPasswordPage';
+import UserProfilePage from './components/UserProfilePage';
 import requireAuth from './requireAuth'
 
 export default (
@@ -13,5 +14,6 @@ export default (
     <Route path="login" component={LoginPage} />
     <Route path="reg" component={RegistrationPage} />
     <Route path="reset_pass" component={ResetPasswordPage} />
+    <Route path="profile" component={UserProfilePage} />
   </Route>
 )
