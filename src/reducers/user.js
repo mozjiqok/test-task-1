@@ -12,6 +12,15 @@ export default (state = initialState, action = {}) => {
 					email: action.email
 				}
       };
+    case 'EDIT_USER_INFO':
+      return {
+				...state,
+        info: {
+					...state.info,
+					fname: action.userData.fname,
+					lname: action.userData.lname
+				}
+      };
     default: return state;
 	}
 }
