@@ -1,72 +1,95 @@
 import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
 import { connect } from 'react-redux';
-import { updateInfo, changePass } from '../actions/userActions';
+import { updateInfo, changePass, fetchUser } from '../actions/userActions';
 import isEmpty from 'lodash/isEmpty';
 
-function validateInput(data) {
+function validateInputPass(data) {
   var errors = {};
-
   if (("" + data.newp).length < 8) {
     errors.newp = 'Пароль должен быть минимум 8 символов';
   }
-
+	else if (data.oldp === data.newp) {
+    errors.newp = 'Пароль не изменился';
+  }
   if (data.conf !== data.newp) {
     errors.conf = 'Пароль не совпадает с подтверждением';
   }
-
   return {
     errors,
     isValid: isEmpty(errors)
   };
 }
 
+function validateInputInfo(data,oData) {
+  var errors = {};
+	const fname = oData.fname ? oData.fname : '';
+	const lname = oData.lname ? oData.lname : '';
+	if ((fname === data.fname) && (lname === data.lname)) {
+    errors.form = 'Информация не изменилась';
+  }
+  return {
+    errors,
+    isValid: isEmpty(errors)
+  };
+}
 
 class UserProfilePage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-			fname: (props.info.fname ? props.info.fname : ''),
-			lname: (props.info.lname ? props.info.lname : ''),
+	
+	componentWillMount(){
+		this.props.fetchUser(this.setState.bind(this));
+    this.setState({
+			fname: (this.props.info.fname ? this.props.info.fname : ''),
+			lname: (this.props.info.lname ? this.props.info.lname : ''),
       oldp: '',
       newp: '',
       conf: '',
       errors: {},
-      success: '',
+      success: 'Загрузка данных...',
       isLoading: false
-    };
+    });
+	}
+	
+	componentWillReceiveProps(newProps){
+		this.setState({
+			fname: (newProps.info.fname ? newProps.info.fname : ''),
+			lname: (newProps.info.lname ? newProps.info.lname : '')
+		});
+	}
 
-    this.onSubmitInfo = this.onSubmitInfo.bind(this);
-    this.onSubmitPass = this.onSubmitPass.bind(this);
-    this.onChange = this.onChange.bind(this);
+  isValidPass() {
+    const { errors, isValid } = validateInputPass(this.state);
+    if (!isValid) {
+      this.setState({ errors, success: '' });
+    }
+    return isValid;
   }
 
-  isValid() {
-    const { errors, isValid } = validateInput(this.state);
-
+  isValidInfo() {
+    const { errors, isValid } = validateInputInfo(this.state, this.props.info);
     if (!isValid) {
-      this.setState({ errors });
+      this.setState({ errors, success: '' });
     }
-
     return isValid;
   }
 
   onSubmitInfo(e) {
     e.preventDefault();
-		this.setState({ isLoading: true });
-		const { fname, lname } = this.state;
-		this.props.updateInfo({fname, lname}).then(
-			(res) => this.setState({ success: res.data.success, isLoading: false }),
-			(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
-		);
+    if (this.isValidInfo()) {
+			this.setState({ errors: {}, success: '', isLoading: true });
+			const { fname, lname } = this.state;
+			const { email } = this.props.info;
+			this.props.updateInfo({email, fname, lname}, this.setState.bind(this));
+		}
   }
 
   onSubmitPass(e) {
     e.preventDefault();
-    if (this.isValid()) {
-			this.setState({ errors: {}, isLoading: true });
+    if (this.isValidPass()) {
+			this.setState({ errors: {}, success: '', isLoading: true });
 			const { oldp, newp, conf } = this.state;
-			this.props.changePass({oldp, newp, conf}).then(
+			const { email } = this.props.info;
+			this.props.changePass({email, oldp, newp, conf}).then(
 				(res) => this.setState({ success: res.data.success, isLoading: false }),
 				(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
 			);
@@ -82,7 +105,7 @@ class UserProfilePage extends React.Component {
 
     return (
 			<div className="col-md-offset-4 col-md-4">
-				<form onSubmit={this.onSubmitInfo}>
+				<form onSubmit={this.onSubmitInfo.bind(this)}>
 					<h1>Информация пользователя</h1>
 
 					{ errors.form && <div className="alert alert-danger">{errors.form}</div> }
@@ -94,7 +117,7 @@ class UserProfilePage extends React.Component {
 						label="Имя"
 						value={fname}
 						error={errors.fname}
-						onChange={this.onChange}
+						onChange={this.onChange.bind(this)}
 					/>
 
 					<TextFieldGroup
@@ -102,13 +125,13 @@ class UserProfilePage extends React.Component {
 						label="Фамилия"
 						value={lname}
 						error={errors.lname}
-						onChange={this.onChange}
+						onChange={this.onChange.bind(this)}
 					/>
 
 					<div className="form-group"><button className="btn btn-primary btn-lg" disabled={isLoading}>Сохранить</button></div>
 					
 				</form>
-				<form onSubmit={this.onSubmitPass}>
+				<form onSubmit={this.onSubmitPass.bind(this)}>
 				
 					<h1>Сменить пароль</h1>
 
@@ -117,7 +140,7 @@ class UserProfilePage extends React.Component {
 						label="Старый пароль"
 						value={oldp}
 						error={errors.oldp}
-						onChange={this.onChange}
+						onChange={this.onChange.bind(this)}
 						type="password"
 					/>
 
@@ -126,7 +149,7 @@ class UserProfilePage extends React.Component {
 						label="Новый пароль"
 						value={newp}
 						error={errors.newp}
-						onChange={this.onChange}
+						onChange={this.onChange.bind(this)}
 						type="password"
 					/>
 
@@ -135,7 +158,7 @@ class UserProfilePage extends React.Component {
 						label="Новый пароль еще раз"
 						value={conf}
 						error={errors.conf}
-						onChange={this.onChange}
+						onChange={this.onChange.bind(this)}
 						type="password"
 					/>
 
@@ -148,7 +171,8 @@ class UserProfilePage extends React.Component {
 
 UserProfilePage.propTypes = {
   updateInfo: React.PropTypes.func.isRequired,
-  changePass: React.PropTypes.func.isRequired
+  changePass: React.PropTypes.func.isRequired,
+  fetchUser: React.PropTypes.func.isRequired
 }
 
 UserProfilePage.contextTypes = {
@@ -161,4 +185,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { updateInfo, changePass })(UserProfilePage);
+export default connect(mapStateToProps, { updateInfo, changePass, fetchUser })(UserProfilePage);
