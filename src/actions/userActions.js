@@ -41,3 +41,15 @@ export function resetPassword(userData) {
 		return axios.post('/',{f:'reset_pass',userData});
 	}
 }
+
+export function updateInfo(userData) {
+	return dispatch => {
+		return axios.post('/',{f:'edit_user_info',userData});
+	}
+}
+
+export function changePass(userData) {
+	return dispatch => {
+		return axios.post('/',{f:'change_pass',userData});
+	}
+}
