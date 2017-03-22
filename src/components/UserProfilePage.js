@@ -1,14 +1,14 @@
 import React from 'react';
 import TextFieldGroup from './TextFieldGroup';
 import { connect } from 'react-redux';
-import { updateInfo, changePass, fetchUser } from '../actions/userActions';
+import { updateInfo, changePass, fetchUser, setAuthToken } from '../actions/userActions';
 import isEmpty from 'lodash/isEmpty';
 
 function validateInputPass(data) {
   var errors = {};
-  if (("" + data.newp).length < 8) {
-    errors.newp = 'Пароль должен быть минимум 8 символов';
-  }
+	if (("" + data.newp).length < 8) {
+		errors.newp = 'Пароль должен быть минимум 8 символов';
+	}
 	else if (data.oldp === data.newp) {
     errors.newp = 'Пароль не изменился';
   }
@@ -90,7 +90,16 @@ class UserProfilePage extends React.Component {
 			const { oldp, newp, conf } = this.state;
 			const { email } = this.props.info;
 			this.props.changePass({email, oldp, newp, conf}).then(
-				(res) => this.setState({ success: res.data.success, isLoading: false }),
+				(res) => {
+					this.setState({
+						success: res.data.success,
+						isLoading: false,
+						oldp: '',
+						newp: '',
+						conf: ''
+					});
+					setAuthToken({authToken:res.data.authToken,email});
+				},
 				(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
 			);
 		}
