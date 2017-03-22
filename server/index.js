@@ -258,14 +258,35 @@ app.post('/*', authenticate, (req, res) => {
 			});
 			break;
 		case 'reg_user':
+			if(
+				!req.body.hasOwnProperty('userData') ||
+				!req.body.userData.hasOwnProperty('email') ||
+				!req.body.userData.hasOwnProperty('pass') ||
+				!req.body.userData.hasOwnProperty('conf')
+			){
+				return false;
+			}
 			var { email, pass, conf } = req.body.userData;
 			validateRegisterData(email, pass, conf, res);
 			break;
 		case 'login':
+			if(
+				!req.body.hasOwnProperty('userData') ||
+				!req.body.userData.hasOwnProperty('email') ||
+				!req.body.userData.hasOwnProperty('pass')
+			){
+				return false;
+			}
 			var { email, pass } = req.body.userData;
 			login(email, pass, res);
 			break;
 		case 'reset_pass':
+			if(
+				!req.body.hasOwnProperty('userData') ||
+				!req.body.userData.hasOwnProperty('email')
+			){
+				return false;
+			}
 			var { email } = req.body.userData;
 			resetPass(email, res);
 	}
