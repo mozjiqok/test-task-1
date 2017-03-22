@@ -42,9 +42,27 @@ export function resetPassword(userData) {
 	}
 }
 
-export function updateInfo(userData) {
+export function fetchUser(setState) {
+  return (dispatch) => {
+		axios.post('/',{f:'fetch_user'}).then(
+			(res) => {
+				dispatch({type:'EDIT_USER_INFO',userData:res.data});
+				setState({success:''});
+			},
+			(err) => setState({ errors: err.response.data.errors, isLoading: false })
+		);
+  };
+}
+
+export function updateInfo(userData,setState) {
 	return dispatch => {
-		return axios.post('/',{f:'edit_user_info',userData});
+		axios.post('/',{f:'edit_user_info',userData}).then(
+			(res) => {
+				setState({ success: res.data.success, isLoading: false });
+				dispatch({type:'EDIT_USER_INFO',userData});
+			},
+			(err) => setState({ errors: err.response.data.errors, isLoading: false })
+		);
 	}
 }
 
