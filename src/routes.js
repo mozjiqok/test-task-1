@@ -14,6 +14,6 @@ export default (
     <Route path="login" component={LoginPage} />
     <Route path="reg" component={RegistrationPage} />
     <Route path="reset_pass" component={ResetPasswordPage} />
-    <Route path="profile" component={UserProfilePage} />
+    <Route path="profile" component={requireAuth(UserProfilePage)} />
   </Route>
 )
