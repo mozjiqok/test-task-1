@@ -24,6 +24,13 @@ export function setCurrentUser(data) {
 	};
 }
 
+export function setAuthToken(data){
+	localStorage.setItem('authToken', data.authToken);
+	localStorage.setItem('email', data.email);
+	const token = data.email + ' ' + data.authToken;
+	axios.defaults.headers.common['Authorization'] = `${token}`;
+}
+
 export function logout() {
   return dispatch => {
     localStorage.removeItem('authToken');
