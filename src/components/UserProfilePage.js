@@ -27,7 +27,7 @@ class UserProfilePage extends React.Component {
     super(props);
     this.state = {
 			fname: (props.info.fname ? props.info.fname : ''),
-			lname:""+props.info.lname,
+			lname: (props.info.lname ? props.info.lname : ''),
       oldp: '',
       newp: '',
       conf: '',
